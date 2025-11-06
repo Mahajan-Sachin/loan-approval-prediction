@@ -3,7 +3,7 @@ name: 🚀 Deploy Loan App to Railway
 on:
   push:
     branches:
-      - main   # Trigger when code is pushed to main branch
+      - main
 
 jobs:
   deploy:
@@ -27,9 +27,8 @@ jobs:
         run: |
           npm install -g @railway/cli
 
-      - name: 🚀 Deploy to Railway (loving-cooperation)
+      - name: 🚀 Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway link loving-cooperation
-          railway up --service web
+          railway up --service web --yes
