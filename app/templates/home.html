@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Approval Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🏦 Loan Approval Prediction System</h1>
+        <p class="subtitle">Fill out the form below to check loan eligibility</p>
+
+        <form action="/predict" method="post" class="form-grid">
+            <label>Gender</label>
+            <select name="Gender" required>
+                <option value="Male" {% if form_data and form_data['Gender']=='Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if form_data and form_data['Gender']=='Female' %}selected{% endif %}>Female</option>
+            </select>
+
+            <label>Married</label>
+            <select name="Married" required>
+                <option value="Yes" {% if form_data and form_data['Married']=='Yes' %}selected{% endif %}>Yes</option>
+                <option value="No" {% if form_data and form_data['Married']=='No' %}selected{% endif %}>No</option>
+            </select>
+
+            <label>Dependents</label>
+            <select name="Dependents" required>
+                {% for dep in ['0', '1', '2', '3+'] %}
+                <option value="{{dep}}" {% if form_data and form_data['Dependents']==dep %}selected{% endif %}>{{dep}}</option>
+                {% endfor %}
+            </select>
+
+            <label>Education</label>
+            <select name="Education" required>
+                <option value="Graduate" {% if form_data and form_data['Education']=='Graduate' %}selected{% endif %}>Graduate</option>
+                <option value="Not Graduate" {% if form_data and form_data['Education']=='Not Graduate' %}selected{% endif %}>Not Graduate</option>
+            </select>
+
+            <label>Self Employed</label>
+            <select name="Self_Employed" required>
+                <option value="No" {% if form_data and form_data['Self_Employed']=='No' %}selected{% endif %}>No</option>
+                <option value="Yes" {% if form_data and form_data['Self_Employed']=='Yes' %}selected{% endif %}>Yes</option>
+            </select>
+
+            <label>Applicant Income (₹)</label>
+            <input type="number" name="ApplicantIncome" value="{{ form_data['ApplicantIncome'] if form_data }}" required>
+
+            <label>Coapplicant Income (₹)</label>
+            <input type="number" name="CoapplicantIncome" value="{{ form_data['CoapplicantIncome'] if form_data }}" required>
+
+            <label>Loan Amount (in thousands)</label>
+            <input type="number" name="LoanAmount" value="{{ form_data['LoanAmount'] if form_data }}" required>
+
+            <label>Loan Term (months)</label>
+            <input type="number" name="Loan_Amount_Term" value="{{ form_data['Loan_Amount_Term'] if form_data }}" required>
+
+            <label>Credit History</label>
+            <select name="Credit_History" required>
+                <option value="1.0" {% if form_data and form_data['Credit_History']=='1.0' %}selected{% endif %}>1.0 (Good)</option>
+                <option value="0.0" {% if form_data and form_data['Credit_History']=='0.0' %}selected{% endif %}>0.0 (Bad)</option>
+            </select>
+
+            <label>Property Area</label>
+            <select name="Property_Area" required>
+                {% for area in ['Urban','Semiurban','Rural'] %}
+                <option value="{{area}}" {% if form_data and form_data['Property_Area']==area %}selected{% endif %}>{{area}}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn">Predict Loan Status</button>
+        </form>
+
+        {% if prediction_text %}
+        <div class="result">
+            <h2>{{ prediction_text }}</h2>
+            {% if confidence %}
+            <p class="confidence">Confidence: {{ confidence }}%</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
