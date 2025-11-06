@@ -13,14 +13,6 @@ virtual/
 # Jupyter checkpoints
 .ipynb_checkpoints
 
-# Model files
-models/*.joblib
-models/*.pkl
-
-# Dataset folder
-data/
-*.csv
-*.xlsx
 
 # Logs and outputs
 logs/
