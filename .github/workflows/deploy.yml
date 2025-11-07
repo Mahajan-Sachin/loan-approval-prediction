@@ -1,4 +1,4 @@
-name: 🚀 Deploy Loan App to Railway
+name: Deploy to Railway
 
 on:
   push:
@@ -6,29 +6,34 @@ on:
       - main
 
 jobs:
-  deploy:
-    name: Deploy to Railway
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📦 Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.12'
 
-      - name: ⚙️ Install dependencies
+      - name: Install dependencies
         run: |
           pip install -r requirements.txt
 
-      - name: 🚄 Install Railway CLI
+      # ✅ Optional sanity check — build Docker image to verify Dockerfile correctness
+      - name: Build Docker image
         run: |
-          npm install -g @railway/cli
+          docker build -t loan-approval .
 
-      - name: 🚀 Deploy to Railway (web service)
+      # ✅ Install Railway CLI
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      # ✅ Deploy using Railway token (no manual linking needed)
+      - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway up --service web --ci
+          railway up --service web
